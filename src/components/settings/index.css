@@ -1,0 +1,37 @@
+.btnSave button span { 
+  color: #fff !important;
+  font-size: 12px !important;
+}
+.box-header {
+  background-color: #f1f9ff;
+  padding-left: 50px !important;
+}
+.box {
+  box-shadow: none !important;
+}
+.box-main {
+  padding-left: 50px !important;
+}
+.box-main-item {
+  margin-bottom: 14px;
+}
+.box-main-item h3 {
+  color: #2196F3;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.box-main-item p {
+  color: #2196F3;
+  font-size: 13px;
+  padding-left: 20px;
+}
+.box-main-item-input {
+  display: flex;
+  align-items: center;
+}
+.unit {
+  margin-left: 10px !important;
+  color: #2196F3;
+  font-size: 11px !important;
+  padding: 0 !important;
+}

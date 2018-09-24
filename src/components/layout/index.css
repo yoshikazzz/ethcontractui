@@ -1,0 +1,65 @@
+html body {
+  font-family: Roboto, sans-serif;
+}
+.row {
+  display: flex;
+}
+.slider-bar {
+  width: 15%;
+  background-color: #2196F3;
+  height: 100%;
+  color: #fff !important;
+  position: fixed;
+}
+.item-slide-bar {
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 100 !important;
+  padding-left: 30px !important;
+}
+.main {
+  width: 85%;
+  min-height: 100vh;
+  margin-left: 15%;
+}
+.header-menu {
+  color: #fff !important;
+}
+.main {
+  padding: 20px;
+  color: #2196F3 !important;
+}
+.header-page {
+  box-sizing: border-box;
+  color: rgb(33, 150, 243);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 48px;
+  padding-left: 16px;
+  width: 100%;
+}
+.project-title {
+  display: flex;
+  align-items: center;
+}
+.project-name {
+  box-sizing: border-box;
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 48px;
+  padding-left: 16px;
+  width: 100%;
+}
+.input {
+  border: 1px solid #cae6fd !important;
+  padding: 10px !important;
+  border-radius: 4px !important;
+  width: 400px !important;
+}
+.textarea {
+  border: 1px solid #cae6fd !important;
+  padding: 10px !important;
+  border-radius: 4px !important;
+  width: 500px !important;
+}

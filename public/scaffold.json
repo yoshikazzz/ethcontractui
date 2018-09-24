@@ -1,0 +1,36 @@
+{
+  "data": [
+    {
+      "name": "totalSupply",
+      "display_name": "Total Supply",
+      "description": "get total supply amount"
+    },
+    {
+      "name": "mint",
+      "display_name": "Mint (Issue)",
+      "description": "issue new tokens"
+    },
+    {
+      "name": "transfer",
+      "display_name": "Transfer",
+      "description": "transfer tokens to specified address"
+    },
+    {
+      "name": "balanceOf",
+      "display_name": "Get Balance",
+      "description": "get balance of specified address",
+      "inputs": [
+        {
+          "name": "_owner",
+          "display_name": "who",
+          "description": "address to query"
+        }
+      ],
+      "outputs": [
+        {
+          "display_name": "available balance"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "data": {
+    "name": "OSE Cash",
+    "title": "OSE Cash Console",
+    "logo": "images/apps.png",
+    "color": {
+      "main": "#222222",
+      "box": "#2196F320",
+      "subtitle": "gray"
+    },
+    "contract": "0xc491cf801b606567cbebacfe5a721aeb00aa65f6"
+  }
+}
