@@ -49,6 +49,19 @@ class Layout extends React.Component<IProps, State> {
     );
   }
 
+  renderTitle(path: string) {
+    switch (path) {
+      case '/':
+        return 'Dashboard';
+      case '/settings':
+        return 'Settings';
+      case '/store':
+        return 'Store';
+      default:
+        return undefined;
+    }
+  }
+
   render() {
     // set title
     document.title = this.props.title;
@@ -64,10 +77,11 @@ class Layout extends React.Component<IProps, State> {
             </div>
             <Link to="/"><ListItem primaryText="DASHBOARD"  className="item-slide-bar" /></Link>
             <Link to="/settings"><ListItem primaryText="SETTINGS" className="item-slide-bar" /></Link>
+            <Link to="/store"><ListItem primaryText="STORE" className="item-slide-bar" /></Link>
           </List>
         </div>
         <div className="main">
-          <h3 style={{color: colorConfig.main}} >{location.pathname === '/' ? 'Dashboard' : 'Settings'}</h3>
+          <h3 style={{color: colorConfig.main}} >{this.renderTitle(location.pathname)}</h3>
           {!settingError ? this.props.children : this.errorView}
         </div>
       </div>

@@ -2,9 +2,20 @@
 
 import Web3 from 'web3';
 
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from '../config';
+
+export type Content = {
+  author: string,
+  title: string,
+  totalSupply: number,
+  price: number,
+  contentPath: string,
+  contentHash: string,
+};
+
 class Contract {
   private get web3() {
-    const web3: any = global['web3'];
+    const web3: any = window['web3'];
     return web3;
   }
 
@@ -28,6 +39,52 @@ class Contract {
     }
     const balance = await web3.eth.getBalance(account);
     return web3.utils.fromWei(balance, 'ether');
+  }
+
+  public async getStoreContents() {
+    const web3: Web3 = new Web3('');
+    web3.setProvider(this.web3.currentProvider);
+    const contract = new web3.eth.Contract(CONTRACT_ABI);
+    contract.options.address = CONTRACT_ADDRESS;
+
+    const contentHashs = [
+      '0xfc8916b97093d54a65d063c3633becdefc8916b97093d54a65d063c3633becde',
+      '0x3a8a3662c8af560c2526643971a69e9d3a8a3662c8af560c2526643971a69e9d',
+      '0x2441e0deeab01aa432ea47c2f27ff0f82441e0deeab01aa432ea47c2f27ff0f8',
+      '0xca222726e9f2a2fa2cca07ae020c69f9ca222726e9f2a2fa2cca07ae020c69f9',
+      '0x7a5ed087a0763c1fde7b994894ee156f7a5ed087a0763c1fde7b994894ee156f',
+    ];
+    const results: Content[] = [];
+    for (let hash of contentHashs) {
+      const content = await contract.methods.contents(hash).call();
+      results.push({
+        title: content.title,
+        author: content.author,
+        totalSupply: content.totalSupply,
+        contentPath: content.contentPath,
+        price: web3.utils.fromWei(content.price, 'finney'),
+        contentHash: hash,
+      });
+    }
+
+    return results;
+  }
+
+  public async purchaseContent(contentHash: string, value: number) {
+    const web3: Web3 = new Web3('');
+    web3.setProvider(this.web3.currentProvider);
+    const contract = new web3.eth.Contract(CONTRACT_ABI);
+    contract.options.address = CONTRACT_ADDRESS;
+    const transaction = contract.methods.purchase(contentHash);
+    const txConfig = {
+      from: this.web3.eth.defaultAccount,
+      to: CONTRACT_ADDRESS,
+      value: web3.utils.toWei(value.toString(), 'finney'),
+      gas: web3.utils.toHex('300000'),
+    };
+    const tx: string = await transaction.send(txConfig);
+    console.log(tx);
+    return tx;
   }
 
   public getNetwork(): Promise<string> {
