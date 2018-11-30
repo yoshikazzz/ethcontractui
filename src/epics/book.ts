@@ -12,14 +12,8 @@ import SmartContracts from '../services/contract';
 
 export const listContents = () => {
   return Observable.of({})
-    .switchMap(async () => {
-      const num = await SmartContracts.getMyBooks();
-      console.log(num);
-      return SmartContracts.getStoreContents();
-    })
-    .map((contents) => {
-      return bookListContentsSuccess(contents);
-    })
+    .switchMap(() => SmartContracts.getMyBooks())
+    .map((contents) => bookListContentsSuccess(contents))
     .catch((reason: Error) => {
       return Observable.of(
         bookListContentsFail(reason),

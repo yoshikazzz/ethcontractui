@@ -1,5 +1,7 @@
 import { Map } from 'immutable';
 import {
+  configurationInitActionType,
+  configurationInitFailActionType,
   configurationInitSuccessActionType,
   displayConfigParams,
 } from '../actions/configuration';
@@ -15,13 +17,19 @@ export type AbiConfigParam = {
 };
 
 export type State = {
+  loading: boolean;
   networkId: string,
+  currentAddress: string,
+  error: string,
   display: displayConfigParams,
   scaffold: AbiConfigParam[],
 };
 
 const initialState: State = {
+  loading: false,
   networkId: '',
+  error: '',
+  currentAddress: '',
   display: {
     name: '',
     title: '',
@@ -38,6 +46,12 @@ const initialState: State = {
 
 export function configuration(state: State = initialState, action: Action): State {
   switch (action.type) {
+    case configurationInitActionType: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
     case configurationInitSuccessActionType:
       const scaffold = action.payload.abi.map(item => {
         let inputConfig = Map<string, { name: string, display_name: string, description: string }>();
@@ -57,10 +71,19 @@ export function configuration(state: State = initialState, action: Action): Stat
       });
       return {
         ...state,
+        loading: false,
         networkId: action.payload.networkId,
+        currentAddress: action.payload.address,
         display: Object.assign({}, state.display, action.payload.display),
         scaffold: scaffold,
       };
+    case configurationInitFailActionType: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.message,
+      };
+    }
     default:
       return {
         ...state,

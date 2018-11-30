@@ -35,6 +35,7 @@ export type abiConfigParam = {
 
 export type configParams = {
   networkId: string,
+  address: string,
   display: displayConfigParams,
   abi: abiConfigParam[],
 };

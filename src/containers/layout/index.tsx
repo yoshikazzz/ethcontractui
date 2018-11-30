@@ -9,7 +9,7 @@ import { settingsInit } from '../../actions/settings';
 import { configurationInit } from '../../actions/configuration';
 
 const mapStateToProps = (state: StoreState): Partial<Props> => ({
-  address: state.settings.account,
+  address: state.configuration.currentAddress,
   contract: state.settings.address,
   abiLists: state.dashboard.abiList,
   networkId: state.configuration.networkId,

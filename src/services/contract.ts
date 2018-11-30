@@ -43,48 +43,13 @@ class Contract {
   }
 
   public async getStoreContents() {
-    const web3: Web3 = new Web3('');
-    web3.setProvider(this.web3.currentProvider);
-    const contract = new web3.eth.Contract(CONTRACT_ABI);
-    contract.options.address = CONTRACT_ADDRESS;
-
-    const contentHashs = [
-      {
-        hash: '0xfc8916b97093d54a65d063c3633becdefc8916b97093d54a65d063c3633becde',
-        thumbnail: 'thumbnails/QmSZwXELabeiqZtdUMrMgZVJptPfXp7H2GUY43dk2pQxxa.png'
-      },
-      { 
-        hash: '0x3a8a3662c8af560c2526643971a69e9d3a8a3662c8af560c2526643971a69e9d',
-        thumbnail: 'thumbnails/QmRiqoszjcsvJPeZADY6Fp5QSvLUnAKHaUEnYdXf7igeQD.png',
-      },
-      { 
-        hash: '0x2441e0deeab01aa432ea47c2f27ff0f82441e0deeab01aa432ea47c2f27ff0f8',
-        thumbnail: 'thumbnails/QmcV9WhWDLjrwNJzcr3XEe9TQrZAX395sKnS75y13anMnd.png',
-      },
-      {
-        hash: '0xca222726e9f2a2fa2cca07ae020c69f9ca222726e9f2a2fa2cca07ae020c69f9',
-        thumbnail: 'thumbnails/QmUMEjCUtxjw5Dukyf24aUvHCLBvWjoo5TREHt2y5pAw83.png',
-      },
-      {
-        hash: '0x7a5ed087a0763c1fde7b994894ee156f7a5ed087a0763c1fde7b994894ee156f',
-        thumbnail: 'thumbnails/QmUBPMNzTiXv7b3WN1ejUUhi15o5stEKFsb1VwgNPbDanT.png'
-      }
-    ];
-    const results: Content[] = [];
-    for (let hash of contentHashs) {
-      const content: Content = await contract.methods.contents(hash.hash).call();
-      results.push({
-        title: content.title,
-        author: content.author,
-        totalSupply: content.totalSupply,
-        contentPath: content.contentPath,
-        price: web3.utils.fromWei(content.price, 'ether'),
-        contentHash: hash.hash,
-        thumbnail: hash.thumbnail
-      });
-    }
-
-    return results;
+    return this.getContents([
+      '0xfc8916b97093d54a65d063c3633becdefc8916b97093d54a65d063c3633becde',
+      '0x3a8a3662c8af560c2526643971a69e9d3a8a3662c8af560c2526643971a69e9d',
+      '0x2441e0deeab01aa432ea47c2f27ff0f82441e0deeab01aa432ea47c2f27ff0f8',
+      '0xca222726e9f2a2fa2cca07ae020c69f9ca222726e9f2a2fa2cca07ae020c69f9',
+      '0x7a5ed087a0763c1fde7b994894ee156f7a5ed087a0763c1fde7b994894ee156f',
+    ]);
   }
 
   public async purchaseContent(contentHash: string, value: number) {
@@ -109,8 +74,17 @@ class Contract {
     web3.setProvider(this.web3.currentProvider);
     const contract = new web3.eth.Contract(CONTRACT_ABI);
     contract.options.address = CONTRACT_ADDRESS;
-    const numContents = await contract.methods.getNumContents().call();
-    return numContents;
+    const txConfig = {
+      from: this.web3.eth.defaultAccount,
+    };
+    const numContents: string = await contract.methods.getNumContents().call({...txConfig});
+    const contentHashs: string[] = [];
+    for (let i = 0; i < parseInt(numContents, 10); i++) {
+      const hash: string = await contract.methods.userContentByIndex(i).call({...txConfig});
+      contentHashs.push(hash);
+    }
+    const contents = await this.getContents(contentHashs);
+    return contents;
   }
 
   public getNetwork(): Promise<string> {
@@ -126,6 +100,31 @@ class Contract {
         }
       });
     });
+  }
+
+  private async getContents(contentHashs: string[]) {
+    const web3: Web3 = new Web3('');
+    web3.setProvider(this.web3.currentProvider);
+    const contract = new web3.eth.Contract(CONTRACT_ABI);
+    contract.options.address = CONTRACT_ADDRESS;
+
+    const results: Content[] = [];
+    for (let hash of contentHashs) {
+      const content: Content = await contract.methods.contents(hash).call();
+      const ipfsHashTest = /\/(\w+)$/.exec(content.contentPath);
+      let ipfsHash = ipfsHashTest && ipfsHashTest.length >= 2 ? ipfsHashTest[1] : '';
+      results.push({
+        title: content.title,
+        author: content.author,
+        totalSupply: content.totalSupply,
+        contentPath: content.contentPath,
+        price: web3.utils.fromWei(content.price, 'ether'),
+        contentHash: hash,
+        thumbnail: `thumbnails/${ipfsHash}.png`,
+      });
+    }
+
+    return results;
   }
 }
 

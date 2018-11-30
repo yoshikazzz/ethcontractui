@@ -15,13 +15,15 @@ export const configLoad = () => {
     .switchMap(() =>
       Promise.all([
         Contract.getNetwork(),
+        Contract.getAccount(),
         Config.getConfig(),
         Config.getScaffoldConfig(),
       ]),
     )
-    .map(([resNetwork, displayConfig, abiConfig]) => {
+    .map(([resNetwork, address, displayConfig, abiConfig]) => {
       return configurationInitSuccess({
         networkId: resNetwork,
+        address,
         display: displayConfig.data,
         abi: abiConfig.data,
       });
