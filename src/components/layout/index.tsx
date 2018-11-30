@@ -3,9 +3,9 @@
 
 import * as React from 'react';
 import { List, ListItem } from 'material-ui/List';
+import { CircularProgress } from 'material-ui';
 import { Link } from 'react-router-dom';
 import './index.css';
-import { getAbiParams } from '../../actions/dashboard';
 import { abiList } from '../../types/api';
 import { ColorConfig } from '../../types';
 // import { PROJECT_NAME } from '../../config';
@@ -22,11 +22,10 @@ export type Props = {
   title: string,
   logo: string,
   colorConfig: ColorConfig,
+  loadingConfig: boolean,
 };
 
 export type DispProps = {
-  loadSetting: () => void,
-  loadAbi: (params: getAbiParams) => void,
   loadConfig: () => void,
 };
 
@@ -36,7 +35,6 @@ type State = {
 type IProps = Props & DispProps;
 
 class Layout extends React.Component<IProps, State> {
-  private timer;
   constructor(props: IProps) {
     super(props);
   }
@@ -66,7 +64,10 @@ class Layout extends React.Component<IProps, State> {
     // set title
     document.title = this.props.title;
 
-    const { location, settingError, colorConfig } = this.props;
+    const { location, settingError, colorConfig, loadingConfig } = this.props;
+    if (loadingConfig) {
+      return <CircularProgress size={50} thickness={5} />;
+    }
     return (
       <div className="row">
         <div className="slider-bar" style={{backgroundColor: colorConfig.main}}>
@@ -87,36 +88,12 @@ class Layout extends React.Component<IProps, State> {
       </div>
     );
   }
-  componentWillMount() {
-    this.props.loadConfig();
-  }
 
   componentDidMount() {
 
     window.addEventListener('load', () => {
-      this.props.loadSetting();
+      this.props.loadConfig();
     });
-
-    this.timer = setInterval(() => {
-      const injectWeb3 = window['web3'];
-      if (injectWeb3.eth.defaultAccount !== this.props.address) {
-        this.props.loadSetting();
-      }
-    }, 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  componentWillReceiveProps(nextProps: IProps) {
-    const { networkId, address, contract } = nextProps;
-    if (address !== this.props.address) {
-      this.props.loadSetting();
-    }
-    if (contract !== this.props.contract || networkId !== this.props.networkId) {
-      this.props.loadAbi({network: networkId, address: contract});
-    }
   }
 
   componentDidUpdate(prevProps: IProps) {
