@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { CircularProgress, IconButton } from 'material-ui';
+import { GridList, GridTile } from 'material-ui/GridList';
 import { Content } from '../../actions/store';
+import ActionShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 
 export interface Props {
   contents: Content[];
@@ -12,7 +15,7 @@ export interface DispProps {
   purchaseContent(contentHash: string, price: number);
 }
 
-type IProps = Props & DispProps; 
+type IProps = Props & DispProps;
 type State = {
   contentIsChoosing: number,
 };
@@ -31,20 +34,30 @@ export default class Store extends React.Component<IProps, State> {
   render() {
     return (
       <div>
-        {`Content count: ${this.props.contents.length}`}
-        {
-          this.props.contents.map(content => (
-            <div
-              key={content.contentPath}
-              onClick={() => {
-                this.props.purchaseContent(content.contentHash, content.price);
-              }}
-            >
-              <span>{`Title: ${content.title}, Price: ${content.price} Finney`}</span>
-            </div>
-          ))
-        }
+        {this.props.loading ? <CircularProgress size={50} thickness={5} /> : null}
+        <div >
+          <GridList
+            cellHeight={180}
+          >
+            {this.props.contents.map((content) => (
+              <GridTile
+                key={content.contentPath}
+                title={`Title: ${content.title}`}
+                subtitle={<span>Price: <b>{`${content.price} ETH`}</b></span>}
+                actionIcon={<IconButton onClick={(e) => this.handleClickPurchase(content, e)}>
+                              <ActionShoppingCart />
+                            </IconButton>}
+              >
+                <img src={content.thumbnail} />
+              </GridTile>
+            ))}
+          </GridList>
+        </div>
       </div>
     );
+  }
+
+  private handleClickPurchase = (content, e) => {
+    this.props.purchaseContent(content.contentHash, content.price);
   }
 }

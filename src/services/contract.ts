@@ -11,6 +11,7 @@ export type Content = {
   price: number,
   contentPath: string,
   contentHash: string,
+  thumbnail: string
 };
 
 class Contract {
@@ -48,22 +49,38 @@ class Contract {
     contract.options.address = CONTRACT_ADDRESS;
 
     const contentHashs = [
-      '0xfc8916b97093d54a65d063c3633becdefc8916b97093d54a65d063c3633becde',
-      '0x3a8a3662c8af560c2526643971a69e9d3a8a3662c8af560c2526643971a69e9d',
-      '0x2441e0deeab01aa432ea47c2f27ff0f82441e0deeab01aa432ea47c2f27ff0f8',
-      '0xca222726e9f2a2fa2cca07ae020c69f9ca222726e9f2a2fa2cca07ae020c69f9',
-      '0x7a5ed087a0763c1fde7b994894ee156f7a5ed087a0763c1fde7b994894ee156f',
+      {
+        hash: '0xfc8916b97093d54a65d063c3633becdefc8916b97093d54a65d063c3633becde',
+        thumbnail: 'thumbnails/QmSZwXELabeiqZtdUMrMgZVJptPfXp7H2GUY43dk2pQxxa.png'
+      },
+      { 
+        hash: '0x3a8a3662c8af560c2526643971a69e9d3a8a3662c8af560c2526643971a69e9d',
+        thumbnail: 'thumbnails/QmRiqoszjcsvJPeZADY6Fp5QSvLUnAKHaUEnYdXf7igeQD.png',
+      },
+      { 
+        hash: '0x2441e0deeab01aa432ea47c2f27ff0f82441e0deeab01aa432ea47c2f27ff0f8',
+        thumbnail: 'thumbnails/QmcV9WhWDLjrwNJzcr3XEe9TQrZAX395sKnS75y13anMnd.png',
+      },
+      {
+        hash: '0xca222726e9f2a2fa2cca07ae020c69f9ca222726e9f2a2fa2cca07ae020c69f9',
+        thumbnail: 'thumbnails/QmUMEjCUtxjw5Dukyf24aUvHCLBvWjoo5TREHt2y5pAw83.png',
+      },
+      {
+        hash: '0x7a5ed087a0763c1fde7b994894ee156f7a5ed087a0763c1fde7b994894ee156f',
+        thumbnail: 'thumbnails/QmUBPMNzTiXv7b3WN1ejUUhi15o5stEKFsb1VwgNPbDanT.png'
+      }
     ];
     const results: Content[] = [];
     for (let hash of contentHashs) {
-      const content = await contract.methods.contents(hash).call();
+      const content: Content = await contract.methods.contents(hash.hash).call();
       results.push({
         title: content.title,
         author: content.author,
         totalSupply: content.totalSupply,
         contentPath: content.contentPath,
-        price: web3.utils.fromWei(content.price, 'finney'),
-        contentHash: hash,
+        price: web3.utils.fromWei(content.price, 'ether'),
+        contentHash: hash.hash,
+        thumbnail: hash.thumbnail
       });
     }
 
@@ -79,7 +96,7 @@ class Contract {
     const txConfig = {
       from: this.web3.eth.defaultAccount,
       to: CONTRACT_ADDRESS,
-      value: web3.utils.toWei(value.toString(), 'finney'),
+      value: web3.utils.toWei(value.toString(), 'ether'),
       gas: web3.utils.toHex('300000'),
     };
     const tx: string = await transaction.send(txConfig);
