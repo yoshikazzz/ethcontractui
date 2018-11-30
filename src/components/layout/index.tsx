@@ -118,6 +118,14 @@ class Layout extends React.Component<IProps, State> {
       this.props.loadAbi({network: networkId, address: contract});
     }
   }
-}
+
+  componentDidUpdate(prevProps: IProps) {
+    const { networkId } = prevProps;
+    const networkRinkebyId = '4';
+    if (this.props.networkId !== networkId && this.props.networkId !== networkRinkebyId) {
+      alert('Please change network on MetaMask to Rinkeby!');
+    }
+  }
+ }
 
 export default Layout;

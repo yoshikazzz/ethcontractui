@@ -8,17 +8,23 @@ import {
   configurationInitFail,
 } from '../actions/configuration';
 import Config from '../services/config';
+import Contract from '../services/contract';
 
 export const configLoad = () => {
   return Observable.of({})
     .switchMap(() =>
       Promise.all([
+        Contract.getNetwork(),
         Config.getConfig(),
         Config.getScaffoldConfig(),
       ]),
     )
-    .map(([displayConfig, abiConfig]) => {
-      return configurationInitSuccess({display: displayConfig.data, abi: abiConfig.data});
+    .map(([resNetwork, displayConfig, abiConfig]) => {
+      return configurationInitSuccess({
+        networkId: resNetwork,
+        display: displayConfig.data,
+        abi: abiConfig.data,
+      });
     })
     .catch((reason: Error) => {
       return Observable.of(
