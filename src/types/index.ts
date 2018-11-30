@@ -2,6 +2,7 @@ import { InitAction } from '../actions/init';
 import { DashboardActions } from '../actions/dashboard';
 import { SettingsActions } from '../actions/settings';
 import { StoreActions } from '../actions/store';
+import { BookActions } from '../actions/book';
 import { ConfigurationActions, displayConfigParams, colorConfigs } from '../actions/configuration';
 
 import { RouterState } from 'react-router-redux';
@@ -9,6 +10,7 @@ import { FormState } from 'redux-form';
 import { State as DashboardState } from '../reducers/dashboard';
 import { State as SettingsState } from '../reducers/settings';
 import { State as StoreState } from '../reducers/store';
+import { State as BookState } from '../reducers/book';
 import { State as ConfigurationState, AbiConfigParam } from '../reducers/configuration';
 
 import { Store as ReduxStore } from 'redux';
@@ -20,6 +22,7 @@ export interface StoreState {
   settings: SettingsState;
   configuration: ConfigurationState;
   store: StoreState;
+  book: BookState;
 }
 
 export type Action = 
@@ -27,6 +30,7 @@ export type Action =
   | DashboardActions
   | SettingsActions
   | StoreActions
+  | BookActions
   | ConfigurationActions;
 
 export type $ActionType<T, P> = {

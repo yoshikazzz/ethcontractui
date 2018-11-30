@@ -104,6 +104,15 @@ class Contract {
     return tx;
   }
 
+  public async getMyBooks() {
+    const web3: Web3 = new Web3('');
+    web3.setProvider(this.web3.currentProvider);
+    const contract = new web3.eth.Contract(CONTRACT_ABI);
+    contract.options.address = CONTRACT_ADDRESS;
+    const numContents = await contract.methods.getNumContents().call();
+    return numContents;
+  }
+
   public getNetwork(): Promise<string> {
     return new Promise((done, fail) => {
       if (!this.web3) {

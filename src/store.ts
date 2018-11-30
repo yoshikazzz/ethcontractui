@@ -10,6 +10,7 @@ import { reducer as formReducer } from 'redux-form';
 import { dashboard as dashboardReducer } from './reducers/dashboard';
 import { settings as settingsReducer } from './reducers/settings';
 import { store as storeReducer } from './reducers/store';
+import { book as bookReducer } from './reducers/book';
 import { configuration as configurationReducer } from './reducers/configuration';
 
 export const history = createHistory();
@@ -33,6 +34,7 @@ const store = createStore<StoreState>(
     dashboard: dashboardReducer,
     settings: settingsReducer,
     store: storeReducer,
+    book: bookReducer,
     configuration: configurationReducer,
   }),
   applyMiddleware(...middlewares)

@@ -57,6 +57,8 @@ class Layout extends React.Component<IProps, State> {
         return 'Settings';
       case '/store':
         return 'Store';
+      case '/book':
+        return 'My Books';
       default:
         return undefined;
     }
@@ -78,6 +80,7 @@ class Layout extends React.Component<IProps, State> {
             <Link to="/"><ListItem primaryText="DASHBOARD"  className="item-slide-bar" /></Link>
             <Link to="/settings"><ListItem primaryText="SETTINGS" className="item-slide-bar" /></Link>
             <Link to="/store"><ListItem primaryText="STORE" className="item-slide-bar" /></Link>
+            <Link to="/book"><ListItem primaryText="MY BOOKS" className="item-slide-bar" /></Link>
           </List>
         </div>
         <div className="main">
@@ -126,6 +129,6 @@ class Layout extends React.Component<IProps, State> {
       alert('Please change network on MetaMask to Rinkeby!');
     }
   }
- }
+ } 
 
 export default Layout;
