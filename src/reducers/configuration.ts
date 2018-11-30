@@ -15,11 +15,13 @@ export type AbiConfigParam = {
 };
 
 export type State = {
+  networkId: string,
   display: displayConfigParams,
   scaffold: AbiConfigParam[],
 };
 
 const initialState: State = {
+  networkId: '',
   display: {
     name: '',
     title: '',
@@ -55,6 +57,7 @@ export function configuration(state: State = initialState, action: Action): Stat
       });
       return {
         ...state,
+        networkId: action.payload.networkId,
         display: Object.assign({}, state.display, action.payload.display),
         scaffold: scaffold,
       };

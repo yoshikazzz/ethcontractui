@@ -12,7 +12,7 @@ const mapStateToProps = (state: StoreState): Partial<Props> => ({
   address: state.settings.account,
   contract: state.settings.address,
   abiLists: state.dashboard.abiList,
-  networkId: state.settings.network,
+  networkId: state.configuration.networkId,
   settingError: state.settings.settingError,
   name: state.configuration.display.name,
   title: state.configuration.display.title,
