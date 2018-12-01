@@ -3,10 +3,14 @@ import { CircularProgress, IconButton } from 'material-ui';
 import { GridList, GridTile } from 'material-ui/GridList';
 import { Content } from '../../actions/store';
 import ActionShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
+import LinearProgress from 'material-ui/LinearProgress';
+
+import './index.css';
 
 export interface Props {
   contents: Content[];
   loading: boolean;
+  purchasing: boolean;
   error: string;
 }
 
@@ -32,10 +36,15 @@ export default class Store extends React.Component<IProps, State> {
     this.props.listStoreContents();
   }
   render() {
+    const { loading, purchasing, error } = this.props;
+    if (loading) {
+      return <CircularProgress size={50} thickness={5} />;
+    }
     return (
       <div>
-        {this.props.loading ? <CircularProgress size={50} thickness={5} /> : null}
-        <div >
+        {purchasing ? <LinearProgress mode="indeterminate" /> : null}
+        <div className="content">
+          {error ? <div>{error}</div> : null}
           <GridList
             cellHeight={180}
           >

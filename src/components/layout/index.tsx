@@ -63,7 +63,7 @@ class Layout extends React.Component<IProps, State> {
     // set title
     document.title = this.props.title;
 
-    const { location, settingError, colorConfig, loadingConfig } = this.props;
+    const { settingError, colorConfig, loadingConfig } = this.props;
     if (loadingConfig) {
       return <CircularProgress size={50} thickness={5} />;
     }
@@ -76,7 +76,6 @@ class Layout extends React.Component<IProps, State> {
           </List>
         </div>
         <div className="main">
-          <h3 style={{color: colorConfig.main}} >{this.renderTitle(location.pathname)}</h3>
           {!settingError ? this.props.children : this.errorView}
         </div>
       </div>

@@ -2,7 +2,7 @@ import { combineEpics } from 'redux-observable';
 import { dashboardLoadContractEpic } from './dashboard';
 import { settingsSaveConfigEpic, settingsInitEpic } from './settings';
 import { listContentsEpic, purchaseContentEpic } from './store';
-import { bookListContentsEpic } from './book';
+import { bookListContentsEpic, bookTransferEpic } from './book';
 import { configurationInitEpic } from './configuration';
 
 import 'rxjs';
@@ -14,5 +14,6 @@ export default combineEpics(
   listContentsEpic,
   purchaseContentEpic,
   bookListContentsEpic,
+  bookTransferEpic,
   configurationInitEpic,
 );

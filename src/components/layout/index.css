@@ -21,13 +21,10 @@ html body {
   width: 85%;
   min-height: 100vh;
   margin-left: 15%;
+  color: #2196F3 !important;
 }
 .header-menu {
   color: #fff !important;
-}
-.main {
-  padding: 20px;
-  color: #2196F3 !important;
 }
 .header-page {
   box-sizing: border-box;

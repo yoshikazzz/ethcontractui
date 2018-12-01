@@ -2,6 +2,9 @@ import {
   storeListContentsType,
   storeListContentsSuccessType,
   storeListContentsFailType,
+  storePurchaseContentType,
+  storePurchaseContentSuccessType,
+  storePurchaseContentFailType,
   Content,
 } from '../actions/store';
 import { Action } from '../types'; 
@@ -9,12 +12,14 @@ import { Action } from '../types';
 export type State = {
   contents: Content[],
   loading: boolean,
+  purchasing: boolean;
   error: string,
 };
 
 const initialState: State = {
   contents: [],
   loading: false,
+  purchasing: false,
   error: '',
 };
 
@@ -39,6 +44,29 @@ export function store(state: State = initialState, action: Action): State {
       return {
         ...state,
         loading: false,
+        error: action.payload.message,
+      };
+    }
+
+    case storePurchaseContentType: {
+      return {
+        ...state,
+        purchasing: true,
+        error: '',
+      };
+    }
+
+    case storePurchaseContentSuccessType: {
+      return {
+        ...state,
+        purchasing: false,
+      };
+    }
+
+    case storePurchaseContentFailType: {
+      return {
+        ...state,
+        purchasing: false,
         error: action.payload.message,
       };
     }

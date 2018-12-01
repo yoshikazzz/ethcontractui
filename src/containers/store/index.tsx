@@ -7,6 +7,7 @@ import { storeListContents, storePurchaseContent } from '../../actions/store';
 const mapStateToProps = (state: StoreState): Props => ({
   contents: state.store.contents,
   loading: state.store.loading,
+  purchasing: state.store.purchasing,
   error: state.store.error,
 });
 

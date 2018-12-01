@@ -81,10 +81,27 @@ class Contract {
     const contentHashs: string[] = [];
     for (let i = 0; i < parseInt(numContents, 10); i++) {
       const hash: string = await contract.methods.userContentByIndex(i).call({...txConfig});
+      if (/0x0{64}/.test(hash)) {
+        continue;
+      }
       contentHashs.push(hash);
     }
     const contents = await this.getContents(contentHashs);
     return contents;
+  }
+
+  public async tranferContent(to: string, hash: string) {
+    const web3: Web3 = new Web3('');
+    web3.setProvider(this.web3.currentProvider);
+    const contract = new web3.eth.Contract(CONTRACT_ABI);
+    contract.options.address = CONTRACT_ADDRESS;
+    const txConfig = {
+      from: this.web3.eth.defaultAccount,
+      to: CONTRACT_ADDRESS,
+      gas: web3.utils.toHex('300000'),
+    };
+    const result = await contract.methods.transfer(to, hash).send({...txConfig});
+    return result;
   }
 
   public getNetwork(): Promise<string> {

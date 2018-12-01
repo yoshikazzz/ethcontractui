@@ -4,8 +4,6 @@ import { connect, Dispatch } from 'react-redux';
 import Layout, { Props, DispProps } from '../../components/layout';
 import { Action, StoreState } from '../../types/';
 
-import { dashboardLoadContract } from '../../actions/dashboard';
-import { settingsInit } from '../../actions/settings';
 import { configurationInit } from '../../actions/configuration';
 
 const mapStateToProps = (state: StoreState): Partial<Props> => ({
@@ -21,8 +19,6 @@ const mapStateToProps = (state: StoreState): Partial<Props> => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>): DispProps => ({
-  loadAbi: bindActionCreators(dashboardLoadContract, dispatch),
-  loadSetting: bindActionCreators(settingsInit, dispatch),
   loadConfig: bindActionCreators(configurationInit, dispatch),
 });
 
