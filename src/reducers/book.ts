@@ -52,6 +52,7 @@ export function book(state: State = initialState, action: Action): State {
       return {
         ...state,
         transfering: true,
+        error: '',
       };
     }
 
@@ -59,6 +60,7 @@ export function book(state: State = initialState, action: Action): State {
       return {
         ...state,
         transfering: false,
+        error: '',
       };
     }
 

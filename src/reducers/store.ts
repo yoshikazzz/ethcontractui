@@ -60,6 +60,7 @@ export function store(state: State = initialState, action: Action): State {
       return {
         ...state,
         purchasing: false,
+        error: '',
       };
     }
 
