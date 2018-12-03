@@ -53,6 +53,7 @@ export default class Store extends React.Component<IProps, State> {
                 key={content.contentPath}
                 title={`Title: ${content.title}`}
                 subtitle={<span>Price: <b>{`${content.price} ETH`}</b></span>}
+                onClick={() => this.onOpenContent(content)}
                 actionIcon={<IconButton onClick={(e) => this.handleClickPurchase(content, e)}>
                               <ActionShoppingCart />
                             </IconButton>}
@@ -68,5 +69,12 @@ export default class Store extends React.Component<IProps, State> {
 
   private handleClickPurchase = (content, e) => {
     this.props.purchaseContent(content.contentHash, content.price);
+  }
+
+  private onOpenContent = (content: Content) => {
+    const win = window.open(content.contentPath, '_blank');
+    if (win) {
+      win.focus();
+    }
   }
 }

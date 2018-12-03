@@ -96,6 +96,7 @@ export default class BookComponent extends React.Component<IProps, State> {
                 key={content.contentPath}
                 title={`Title: ${content.title}`}
                 subtitle={<span>Price: <b>{`${content.price} ETH`}</b></span>}
+                onClick={() => this.onOpenContent(content)}
                 actionIcon={<IconButton onClick={(e) => this.onSelectContent(content, e)}><ContentSend /></IconButton>}
               >
                 <img src={content.thumbnail} />
@@ -106,6 +107,13 @@ export default class BookComponent extends React.Component<IProps, State> {
         {this.sendView}
       </div>
     );
+  }
+
+  private onOpenContent = (content: Content) => {
+    const win = window.open(content.contentPath, '_blank');
+    if (win) {
+      win.focus();
+    }
   }
 
   private onSelectContent = (content: Content, e) => {
