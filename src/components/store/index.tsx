@@ -72,7 +72,7 @@ export default class Store extends React.Component<IProps, State> {
   }
 
   private onOpenContent = (content: Content) => {
-    const win = window.open(content.contentPath, '_blank');
+    const win = window.open(`/#/book/${content.contentHash}`, '_blank');
     if (win) {
       win.focus();
     }

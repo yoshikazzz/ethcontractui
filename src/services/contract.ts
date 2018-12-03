@@ -52,6 +52,10 @@ class Contract {
     ]);
   }
 
+  public async getBook(hash: string) {
+    return this.getContents([hash]);
+  }
+
   public async purchaseContent(contentHash: string, value: number) {
     const web3: Web3 = new Web3('');
     web3.setProvider(this.web3.currentProvider);
