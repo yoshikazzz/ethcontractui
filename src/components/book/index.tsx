@@ -96,10 +96,9 @@ export default class BookComponent extends React.Component<IProps, State> {
                 key={content.contentPath}
                 title={`Title: ${content.title}`}
                 subtitle={<span>Price: <b>{`${content.price} ETH`}</b></span>}
-                onClick={() => this.onOpenContent(content)}
                 actionIcon={<IconButton onClick={(e) => this.onSelectContent(content, e)}><ContentSend /></IconButton>}
               >
-                <img src={content.thumbnail} />
+                <img onClick={() => this.onOpenContent(content)} className="book-thumbnail" src={content.thumbnail} />
               </GridTile>
             ))}
           </GridList>
