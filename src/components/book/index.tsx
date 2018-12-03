@@ -117,6 +117,7 @@ export default class BookComponent extends React.Component<IProps, State> {
   }
 
   private onSelectContent = (content: Content, e) => {
+    e.stopPropagation();
     this.setState({selectedContent: content.contentHash});
   }
 

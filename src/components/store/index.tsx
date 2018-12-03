@@ -68,6 +68,7 @@ export default class Store extends React.Component<IProps, State> {
   }
 
   private handleClickPurchase = (content, e) => {
+    e.stopPropagation();
     this.props.purchaseContent(content.contentHash, content.price);
   }
 
