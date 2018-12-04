@@ -12,7 +12,8 @@ import { Action } from '../types';
 export type State = {
   book: Content,
   loading: boolean,
-  transfering: boolean;
+  transfering: boolean,
+  purchasing: boolean,
   error: string,
 };
 
@@ -28,6 +29,7 @@ const initialState: State = {
   },
   loading: false,
   transfering: false,
+  purchasing: false,
   error: '',
 };
 

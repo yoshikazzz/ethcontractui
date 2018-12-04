@@ -15,6 +15,7 @@ export default function AppRouting() {
             <Route exact={true} path="/" component={BookContainer} />
             <Route exact={true} path="/store" component={StoreContainer} />
             <Route exact={true} path="/book" component={BookContainer} />
+            <Route exact={true} path="/store/:contentHash" component={BookDetailComponent} />
             <Route exact={true} path="/book/:contentHash" component={BookDetailComponent} />
           </Switch>
         </Layout>

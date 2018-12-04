@@ -109,7 +109,7 @@ export default class BookComponent extends React.Component<IProps, State> {
   }
 
   private onOpenContent = (content: Content) => {
-    const win = window.open(content.contentPath, '_blank');
+    const win = window.open(`/#/book/${content.contentHash}`, '_blank');
     if (win) {
       win.focus();
     }
@@ -130,7 +130,6 @@ export default class BookComponent extends React.Component<IProps, State> {
 
   private onTransferContent = () => {
     const { transferTo, selectedContent } = this.state;
-    console.log(transferTo, selectedContent);
     this.setState({selectedContent: '', transferTo: ''});
     this.props.transferBook(transferTo, selectedContent);
   }

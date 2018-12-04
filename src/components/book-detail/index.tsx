@@ -3,17 +3,25 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Content } from '../../actions/book';
-import { CircularProgress, FlatButton } from 'material-ui';
+import { CircularProgress, FlatButton, Dialog, TextField } from 'material-ui';
 import { Card, CardHeader, CardMedia, CardActions } from 'material-ui/Card';
 import LinearProgress from 'material-ui/LinearProgress';
 
 import './index.css';
 
-const styles = {
+const styles: { [key: string]: React.CSSProperties } = {
+  cardMedia: {
+    backgroundColor: '#f8f8f8',
+  },
   img: {
+    display: 'block',
+    margin: 'auto auto',
     minWidth: '20%',
     maxWidth: '50%',
     width: '35%'
+  },
+  flatButton: {
+    
   }
 };
 
@@ -22,7 +30,7 @@ export interface Props {
   loading: boolean;
   tranfering: boolean;
   purchasing: boolean;
-  bookError: string;
+  error: string;
   configLoading: boolean;
   currentAddress: string;
 }
@@ -33,10 +41,11 @@ export interface DispProps {
   transferBook(to: string, contentHash: string);
 }
 
-type IProps = Props & DispProps & RouteComponentProps<{contentHash: string}>; 
+type IProps = Props & DispProps & RouteComponentProps<{ contentHash: string }>;
 type State = {
   contentHash: string,
   transferTo: string,
+  isOpenTransfer: boolean,
 };
 
 export default class BookDetailComponent extends React.Component<IProps, State> {
@@ -45,11 +54,63 @@ export default class BookDetailComponent extends React.Component<IProps, State> 
     this.state = {
       contentHash: this.props.match.params.contentHash,
       transferTo: '',
+      isOpenTransfer: false,
     };
   }
 
   componentDidMount() {
     this.props.getBook(this.state.contentHash);
+  }
+
+  componentWillReceiveProps(nextProps: IProps) {
+    const { configLoading, currentAddress, purchasing, error, tranfering } = nextProps;
+    if ((!configLoading && (this.props.configLoading || currentAddress !== this.props.currentAddress)) ||
+        (!purchasing && this.props.purchasing && !error) ||
+        (!tranfering && this.props.tranfering)) {
+      this.setState({contentHash: ''});
+    }
+  }
+
+  get actionButton () {
+    const { book, match } = this.props;
+    const { contentHash } = this.state;
+    const pathUrl = match.path;
+    const reg = pathUrl.match(/\/book\/:contentHash/);
+    if (reg || contentHash === '') {
+      return (
+        <>
+        <FlatButton key="view" label="View" primary={true} onClick={(e) => this.onOpenContent(book)} />
+        <FlatButton key="tranfer" label="Transfer" primary={true} onClick={(e) => this.handleClickTransfer(e)} />
+        </>
+      );
+    } else {
+      return (
+        <>
+        <FlatButton key="send" label="Purchase" primary={true} onClick={(e) => this.handleClickPurchase(book, e)} />
+        </>
+      );
+    }
+  }
+
+  get sendView() {
+    const actions = [
+      <FlatButton key="send" label="Send" primary={true} onClick={() => this.onTransferContent()} />,
+    ];
+    return (
+      <Dialog
+        title="Tranfer content"
+        actions={actions}
+        modal={false}
+        open={!!this.state.isOpenTransfer}
+        onRequestClose={this.handleClose}
+      >
+        <TextField
+          hintText=""
+          floatingLabelText="Transfer to"
+          onChange={this.onChangeAddress}
+        />
+      </Dialog>
+    );
   }
 
   render() {
@@ -61,29 +122,31 @@ export default class BookDetailComponent extends React.Component<IProps, State> 
       <div >
         {this.props.tranfering ? <LinearProgress mode="indeterminate" /> : null}
         <div className="content">
+          {this.props.error ? <div>{this.props.error}</div> : null}
           <Card>
             <CardHeader
               subtitleStyle={{}}
               title={`ID: ${book.contentHash}`}
               subtitle={
                 <>
-                <div>
-                <span>Title: {book.title}</span>
-                </div>
-                <div>
-                <span>Price: {book.price}</span>
-                </div>
+                  <div>
+                    <span>Title: {book.title}</span>
+                  </div>
+                  <div>
+                    <span>Price: {book.price} ETH</span>
+                  </div>
                 </>
               }
             />
-            <CardMedia>
+            <CardMedia mediaStyle={styles.cardMedia}>
               <img src={book.thumbnail} style={styles.img} />
             </CardMedia>
             <CardActions>
-              <FlatButton key="send" label="Purchase" primary={true} onClick={(e) => this.handleClickPurchase(book, e)} />,
+              {this.actionButton}
             </CardActions>
           </Card>
         </div>
+        {this.sendView}
       </div>
     );
   }
@@ -91,5 +154,32 @@ export default class BookDetailComponent extends React.Component<IProps, State> 
   private handleClickPurchase = (book, e) => {
     e.stopPropagation();
     this.props.purchaseContent(book.contentHash, book.price);
+  }
+
+  private handleClickTransfer = (e) => {
+    e.stopPropagation();
+    this.setState({isOpenTransfer: true});    
+  }
+
+  private onOpenContent = (content: Content) => {
+    const win = window.open(content.contentPath, '_blank');
+    if (win) {
+      win.focus();
+    }
+  }
+
+  private handleClose = () => {
+    this.setState({transferTo: '', isOpenTransfer: false});
+  }
+
+  private onChangeAddress = (e, newValue) => {
+    this.setState({transferTo: newValue});
+  }
+
+  private onTransferContent = () => {
+    const { transferTo } = this.state;
+    const { book } = this.props;
+    this.setState({transferTo: '', isOpenTransfer: false});
+    this.props.transferBook(transferTo, book.contentHash);
   }
 }

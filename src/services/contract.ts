@@ -104,8 +104,12 @@ class Contract {
       to: CONTRACT_ADDRESS,
       gas: web3.utils.toHex('300000'),
     };
-    const result = await contract.methods.transfer(to, hash).send({...txConfig});
-    return result;
+    try {
+      const result = await contract.methods.transfer(to, hash).send({...txConfig});
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   public getNetwork(): Promise<string> {
@@ -132,6 +136,7 @@ class Contract {
     const results: Content[] = [];
     for (let hash of contentHashs) {
       const content: Content = await contract.methods.contents(hash).call();
+      // TODO: check content not found
       const ipfsHashTest = /\/(\w+)$/.exec(content.contentPath);
       let ipfsHash = ipfsHashTest && ipfsHashTest.length >= 2 ? ipfsHashTest[1] : '';
       results.push({

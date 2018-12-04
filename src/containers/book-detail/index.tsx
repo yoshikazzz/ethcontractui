@@ -8,8 +8,8 @@ const mapStateToProps = (state: StoreState): Props => ({
   book: state.bookDetail.book,
   loading: state.bookDetail.loading,
   tranfering: state.bookDetail.transfering,
-  purchasing: state.store.purchasing,
-  bookError: state.bookDetail.error,
+  purchasing: state.bookDetail.purchasing,
+  error: state.bookDetail.error,
   configLoading: state.configuration.loading,
   currentAddress: state.configuration.currentAddress,
 });

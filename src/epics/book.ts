@@ -15,6 +15,9 @@ import {
   bookDetailGetBookType,
   bookDetailGetBookSuccess,
   bookDetailGetBookFail,
+  bookDetailTransferType,
+  bookDetailTransferSuccess,
+  bookDetailTransferFail
 } from '../actions/book-detail';
 
 import SmartContracts from '../services/contract';
@@ -37,6 +40,17 @@ export const transferBook = (to, hash) => {
     .catch((reason: Error) => {
       return Observable.of(
         bookTransferFail(reason),
+      );
+    });
+};
+
+export const transfeDetailBook = (to, hash) => {
+  return Observable.of({})
+    .switchMap(() => SmartContracts.tranferContent(to, hash))
+    .map((res) => bookDetailTransferSuccess())
+    .catch((reason: Error) => {
+      return Observable.of(
+        bookDetailTransferFail(reason),
       );
     });
 };
@@ -67,6 +81,12 @@ export const bookTransferEpic = (action$: ActionsObservable<Action>): Observable
 
 export const bookDetailGetBookEpic = (action$: ActionsObservable<Action>): Observable<Action> => {
   return action$
-    .ofType(bookDetailGetBookType)
-    .switchMap(({payload}) => getBookDetail(payload));
+  .ofType(bookDetailGetBookType)
+  .switchMap(({payload}) => getBookDetail(payload));
+};
+
+export const bookDetailTransferEpic = (action$: ActionsObservable<Action>): Observable<Action> => {
+  return action$
+    .ofType(bookDetailTransferType)
+    .switchMap(({payload}) => transfeDetailBook(payload.to, payload.contentHash));
 };
