@@ -1,6 +1,6 @@
 import { $ActionType } from '../types';
 import { Content } from '../services/contract';
-import { PurchaseContentParams } from './store';
+import { PurchaseContentParams, bookDetailSuccessParams } from './store';
 
 export type Content = Content;
 
@@ -16,7 +16,7 @@ export const bookDetailGetBookType: 'BOOK_DETAIL_GET_BOOK' = 'BOOK_DETAIL_GET_BO
 export type BookDetailGetBook = $ActionType<typeof bookDetailGetBookType, string>;
 
 export const bookDetailGetBookSuccessType: 'BOOK_DETAIL_GET_BOOK_SUCCESS' = 'BOOK_DETAIL_GET_BOOK_SUCCESS';
-export type BookDetailGetBookSuccess = $ActionType<typeof bookDetailGetBookSuccessType, Content>;
+export type BookDetailGetBookSuccess = $ActionType<typeof bookDetailGetBookSuccessType, bookDetailSuccessParams>;
 
 export const bookDetailGetBookFailType: 'BOOK_DETAIL_GET_BOOK_FAIL' = 'BOOK_DETAIL_GET_BOOK_FAIL';
 export type BookDetailGetBookFail = $ActionType<typeof bookDetailGetBookFailType, Error>;
@@ -30,14 +30,14 @@ export type BookDetailTransferSuccess = $ActionType<typeof bookDetailTransferSuc
 export const bookDetailTransferFailType: 'BOOK_DETAIL_TRANSFER_FAIL' = 'BOOK_DETAIL_TRANSFER_FAIL';
 export type BookDetailTransferFail = $ActionType<typeof bookDetailTransferFailType, Error>;
 
-export const bookPurchaseType: 'STORE_PURCHASE_CONTENT' = 'STORE_PURCHASE_CONTENT';
-export type StorePurchaseContent = $ActionType<typeof bookPurchaseType, PurchaseContentParams>;
+export const bookDetailPurchaseType: 'STORE_PURCHASE_CONTENT' = 'STORE_PURCHASE_CONTENT';
+export type BookDetailPurchase = $ActionType<typeof bookDetailPurchaseType, PurchaseContentParams>;
 
-export const bookPurchaseSuccessType: 'STORE_PURCHASE_CONTENT_SUCCESS' = 'STORE_PURCHASE_CONTENT_SUCCESS';
-export type StorePurchaseContentSuccess = $ActionType<typeof bookPurchaseSuccessType, string>;
+export const bookDetailPurchaseSuccessType: 'STORE_PURCHASE_CONTENT_SUCCESS' = 'STORE_PURCHASE_CONTENT_SUCCESS';
+export type BookDetailPurchaseSuccess = $ActionType<typeof bookDetailPurchaseSuccessType, string>;
 
-export const bookPurchaseFailType: 'STORE_PURCHASE_CONTENT_FAIL' = 'STORE_PURCHASE_CONTENT_FAIL';
-export type StorePurchaseContentFail = $ActionType<typeof bookPurchaseFailType, Error>;
+export const bookDetailPurchaseFailType: 'STORE_PURCHASE_CONTENT_FAIL' = 'STORE_PURCHASE_CONTENT_FAIL';
+export type BookDetailPurchaseFail = $ActionType<typeof bookDetailPurchaseFailType, Error>;
 
 export type BookDetailActions = 
   | BookDetailInitAction
@@ -46,7 +46,10 @@ export type BookDetailActions =
   | BookDetailGetBookFail
   | BookDetailTransfer
   | BookDetailTransferSuccess
-  | BookDetailTransferFail;
+  | BookDetailTransferFail
+  | BookDetailPurchase
+  | BookDetailPurchaseSuccess
+  | BookDetailPurchaseFail;
 
 export const bookDetailInit = (): BookDetailInitAction => {
   return {
@@ -62,10 +65,10 @@ export const getBook = (contentHash: string): BookDetailGetBook => {
   };
 };
 
-export const bookDetailGetBookSuccess = (book: Content): BookDetailGetBookSuccess => {
+export const bookDetailGetBookSuccess = (params: bookDetailSuccessParams): BookDetailGetBookSuccess => {
   return {
     type: bookDetailGetBookSuccessType,
-    payload: book,
+    payload: params,
   };
 };
 
@@ -97,23 +100,23 @@ export const bookDetailTransferFail = (error: Error): BookDetailTransferFail => 
   };
 };
 
-export const bookPurchase = (params: PurchaseContentParams): StorePurchaseContent => {
+export const bookDetailPurchase = (params: PurchaseContentParams): BookDetailPurchase => {
   return {
-    type: bookPurchaseType,
+    type: bookDetailPurchaseType,
     payload: params,
   };
 };
 
-export const bookPurchaseSuccess = (txHash: string): StorePurchaseContentSuccess => {
+export const bookDetailPurchaseSuccess = (txHash: string): BookDetailPurchaseSuccess => {
   return {
-    type: bookPurchaseSuccessType,
+    type: bookDetailPurchaseSuccessType,
     payload: txHash,
   };
 };
 
-export const bookPurchaseFail = (error: Error): StorePurchaseContentFail => {
+export const bookDetailPurchaseFail = (error: Error): BookDetailPurchaseFail => {
   return {
-    type: bookPurchaseFailType,
+    type: bookDetailPurchaseFailType,
     payload: error,
   };
 };

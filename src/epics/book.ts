@@ -57,8 +57,25 @@ export const transfeDetailBook = (to, hash) => {
 
 export const getBookDetail = (hash) => {
   return Observable.of({})
-    .switchMap(() => SmartContracts.getBook(hash))
-    .map((book) => bookDetailGetBookSuccess(book[0]))
+    .switchMap(async () => {
+      const bookList = await SmartContracts.getStoreContents();
+      const myBooks = await SmartContracts.getMyBooks();
+      let result: any = {};
+      const bookResult = myBooks.find(book => book.contentHash === hash);
+      if (bookResult === undefined) {
+        const bookInStore = bookList.find(book => book.contentHash === hash);
+        if (bookInStore === undefined) {
+          throw new Error('This book not found');
+        }
+        result.book = bookInStore;
+        result.isMyBook = false;
+        return result;
+      }
+      result.book = bookResult;
+      result.isMyBook = true;
+      return result;
+    })
+    .map((book) => bookDetailGetBookSuccess(book))
     .catch((reason: Error) => {
       return Observable.of(
         bookDetailGetBookFail(reason),

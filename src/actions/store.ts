@@ -7,6 +7,11 @@ export type PurchaseContentParams = {
   price: number;
 };
 
+export type bookDetailSuccessParams = {
+  book: Content;
+  isMyBook: boolean;
+};
+
 export const storeInitActionType: 'STORE_INIT' = 'STORE_INIT';
 export type StoreInitAction = $ActionType<typeof storeInitActionType, null>;
 

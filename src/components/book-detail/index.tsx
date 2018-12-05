@@ -27,6 +27,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 export interface Props {
   book: Content;
+  isMyBook: boolean;
   loading: boolean;
   tranfering: boolean;
   purchasing: boolean;
@@ -66,17 +67,14 @@ export default class BookDetailComponent extends React.Component<IProps, State> 
     const { configLoading, currentAddress, purchasing, error, tranfering } = nextProps;
     if ((!configLoading && (this.props.configLoading || currentAddress !== this.props.currentAddress)) ||
         (!purchasing && this.props.purchasing && !error) ||
-        (!tranfering && this.props.tranfering)) {
-      this.setState({contentHash: ''});
+        (!tranfering && this.props.tranfering && !error)) {
+        nextProps.getBook(this.state.contentHash);
     }
   }
 
   get actionButton () {
-    const { book, match } = this.props;
-    const { contentHash } = this.state;
-    const pathUrl = match.path;
-    const reg = pathUrl.match(/\/book\/:contentHash/);
-    if (reg || contentHash === '') {
+    const { book, isMyBook } = this.props;
+    if (isMyBook) {
       return (
         <>
         <FlatButton key="view" label="View" primary={true} onClick={(e) => this.onOpenContent(book)} />
@@ -120,7 +118,7 @@ export default class BookDetailComponent extends React.Component<IProps, State> 
     }
     return (
       <div >
-        {this.props.tranfering ? <LinearProgress mode="indeterminate" /> : null}
+        {this.props.tranfering || this.props.purchasing ? <LinearProgress mode="indeterminate" /> : null}
         <div className="content">
           {this.props.error ? <div>{this.props.error}</div> : null}
           <Card>

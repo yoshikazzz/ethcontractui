@@ -5,12 +5,16 @@ import {
   bookDetailTransferType,
   bookDetailTransferFailType,
   bookDetailTransferSuccessType,
+  bookDetailPurchaseType,
   Content,
+  bookDetailPurchaseSuccessType,
+  bookDetailPurchaseFailType,
 } from '../actions/book-detail';
 import { Action } from '../types'; 
 
 export type State = {
   book: Content,
+  isMyBook: boolean,
   loading: boolean,
   transfering: boolean,
   purchasing: boolean,
@@ -27,6 +31,7 @@ const initialState: State = {
     thumbnail: '',
     price: -1,
   },
+  isMyBook: false,
   loading: false,
   transfering: false,
   purchasing: false,
@@ -46,7 +51,8 @@ export function bookDetail(state: State = initialState, action: Action): State {
       return {
         ...state,
         loading: false,
-        book: action.payload
+        book: action.payload.book,
+        isMyBook: action.payload.isMyBook,
       };
     }
 
@@ -81,6 +87,31 @@ export function bookDetail(state: State = initialState, action: Action): State {
         error: action.payload.message,
       };
     }
+
+    case bookDetailPurchaseType: {
+      return {
+        ...state,
+        purchasing: true,
+        error: ''
+      };
+    }
+
+    case bookDetailPurchaseSuccessType: {
+      return {
+        ...state,
+        purchasing: false,
+        error: ''
+      };
+    }
+
+    case bookDetailPurchaseFailType: {
+      return {
+        ...state,
+        purchasing: false,
+        error: action.payload.message
+      };
+    }
+
     default:
       return {
         ...state
